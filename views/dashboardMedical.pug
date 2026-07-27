@@ -1,0 +1,399 @@
+doctype html
+html(lang='es')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title SIGCMI - Portal Médico
+    link(rel="stylesheet", href="/css/dashboardMedical.css")
+  body
+    .container
+      // SIDEBAR
+      aside#sidebar.sidebar
+        .logo
+          span.logo-text SIGCMI
+          button#toggleBtn(onclick='toggleSidebar()' aria-label='Abrir o cerrar menú') ☰
+        hr.line-1
+        .user
+          .avatar
+            img.avatar-img(src='/img/icono-medico-avatar.svg' alt='Avatar médico')
+          div
+            p.bienvenido-txt Bienvenido
+            h4 montoyajuanes11
+            span Médico General
+            button.btn-ver-perfil(onclick="alert('Ir a: Mi Perfil')") Ver Mi Perfil
+        hr.line-2
+        nav
+          a.nav-link.preActive(href='#' onclick="cambiarVista(event,'agendaView',this)")
+            img(src='/img/icono-agenda.svg' alt='Agenda')
+            .nav-item Agenda
+          a.nav-link(href='#' onclick="cambiarVista(event,'pacientesView',this)")
+            img(src='/img/icono-pacientes.svg' alt='Mis Pacientes')
+            .nav-item Mis Pacientes
+        hr.line-3
+        .logout(onclick='cerrarSesion()')
+          img.log-out(src='/img/icono-salir.svg' alt='Cerrar sesión')
+          span.sesionlogout Cerrar Sesión
+      // MAIN
+      main#mainContent.main
+        // VISTA: AGENDA
+        section#agendaView.view.active
+          header.header   
+            div
+              h1 Portal Médico
+              span.fecha-header 3 de Abril del 2026
+          section.cards
+            .card
+              p Citas Hoy
+              .card-body
+                .card-left
+                  h2 48
+                  span.card-sub 2 completadas
+                .card-icon.icono-azul
+                  img(src='/img/blueCalendar.png' alt='Citas')
+            .card
+              p Pacientes Activos
+              .card-body
+                .card-left
+                  h2 48
+                  span.card-sub +3 este mes
+                .card-icon.icono-verde
+                  img(src='/img/usderGreen.png' alt='Pacientes')
+            .card
+              p Consultas Esta Semana
+              .card-body
+                .card-left
+                  h2 48
+                  span.card-sub Promedio: 9/día
+                .card-icon.icono-morado
+                  img(src='/img/historyUser.png' alt='Consultas')
+            .card
+              p Tiempo Promedio
+              .card-body
+                .card-left
+                  h2 48
+                  span.card-sub Por consulta
+                .card-icon.icono-naranja
+                  img(src='/img/clockUserADMIN.png' alt='Tiempo')
+          section.content
+            // AGENDA DEL DÍA
+            .appointments
+              h3 Mi Agenda de hoy
+              // Cita 1: Completada
+              .appointment.estado-completada
+                .left
+                  span.hour 09:00
+                  div
+                    h4 María González
+                    p Consulta de rutina
+                .right
+                  span.state.greenState Completado
+              // Cita 2: En curso
+              #cita2.appointment.estado-encurso
+                .left
+                  span.hour.hour-encurso 10:25
+                  div
+                    h4 María González
+                    p Consulta post-operatoria
+                .right
+                  span.state.yellowState En curso
+                .btn-full-row
+                  button.btn-consulta.btn-finalizar(onclick="finalizarConsulta('cita2')")
+                    | Finalizar
+                    | Consulta
+              // Cita 3: Pendiente
+              #cita3.appointment.estado-pendiente
+                .left
+                  span.hour 10:00
+                  div
+                    h4 María González
+                    p Consulta post-operatoria
+                .right
+                  span.state.greyState Pendiente
+                .btn-full-row
+                  button.btn-consulta.btn-iniciar(onclick="iniciarConsulta('cita3')") Iniciar Consulta
+            // ACCIONES RÁPIDAS
+            .actions
+              h3 Acciones Rápidas
+              button.btnActions.btnActionBlue(onclick='abrirModal()') Gestionar Citas
+              button.btnActions.btnActionGreen(onclick='abrirModalHorarios()') Configurar Horarios
+              .proxima-cita
+                .proxima-cita-header
+                  img.proxima-icon(src='/img/Icon.png' alt='Reloj')
+                  span Próxima Cita
+                .proxima-hora 11:00 AM
+                .proxima-paciente Ana Rodríguez
+                .proxima-motivo Medicina interna
+        // fin agendaView
+        section#pacientesView.view
+          header.header
+            div
+              h1 Mis Pacientes
+              span.fecha-header 3 de Abril del 2026
+          .pacientes-layout
+            // COLUMNA IZQUIERDA: lista
+            .pacientes-lista
+              .pacientes-search-box
+                span.search-icon 🔍
+                input(type='text' placeholder='Buscar paciente...' oninput='filtrarPacientes(this.value)')
+              .paciente-item.activo(onclick='seleccionarPaciente(this)')
+                img(src='/img/icono-medico-avatar.svg' alt)
+                div
+                  h4 María González Pérez
+                  span
+                    img.NegroCalen(src='/img/CalendarNegro.png' alt='Imagen Calendario')
+                    |  5 citas
+                  span
+                    img.NegroCalen(src='/img/Google-Docs Negro.png' alt='Imagen archivo')
+                    |  3 diagnósticos
+                span.paciente-arrow ›
+              .paciente-item(onclick='seleccionarPaciente(this)')
+                img.NegroCalen(src='/img/icono-medico-avatar.svg' alt)
+                div
+                  h4 María González Pérez
+                  span
+                    img.NegroCalen(src='/img/CalendarNegro.png' alt='Imagen Calendario')
+                    |  5 citas
+                  span
+                    img.NegroCalen(src='/img/Google-Docs Negro.png' alt)
+                    |  3 diagnósticos
+                span.paciente-arrow ›
+            // COLUMNA DERECHA: detalle
+            .paciente-detalle
+              .detalle-header
+                img.detalle-avatar(src='/img/icono-medico-avatar.svg' alt)
+                .detalle-info
+                  h2 María González Pérez
+                  p
+                    | Email: 
+                    a(href='mailto:sigcmi@gmail.com') sigcmi@gmail.com
+                  p Teléfono: 3137482412
+                .detalle-meta
+                  p Edad: 35 años
+                  p Última Visita: 9/04/2026
+              .detalle-badges
+                span.badge.badge-blue
+                  img(src='/img/CalendarPaciente.png' alt='Imagen Calendario')
+                  |  Citas: 5
+                span.badge.badge-purple
+                  img(src='/img/google-docs 2.png' alt='Imagen archivo')
+                  |  Diagnósticos: 3
+              .historial
+                h3 Historial Médico
+                .historial-card
+                  h4 Gripe común con síntomas de congestión nasal:
+                  p.historial-fecha 9/abr/2026
+                  p
+                    strong Síntomas:
+                  p Fiebre de 38C, congestion nasal, dolor de garganta.
+                  p
+                    strong Tratamiento:
+                  p Reposo, hidratacion abundante y acetaminofen cada 6 horas.
+                .historial-card
+                  h4 Gastritis aguda por estrés
+                  p.historial-fecha 11 de marzo de 2026
+                  p
+                    strong Síntomas:
+                  p Dolor epigástrico intenso, náuseas
+                  p
+                    strong Tratamiento:
+                  p Omeprazol 20mg en ayunas por 14 días, dieta blanda
+                .historial-card
+                  h4 Control general anual - Paciente sano
+                  p.historial-fecha 19 de enero de 2026
+                  p
+                    strong Síntomas:
+                  p Sin síntomas, control preventivo
+                  p
+                    strong Tratamiento:
+                  p Vitamina D 1000 UI diaria como suplemento preventivo
+    #sidebarOverlay.sidebar-overlay(onclick='cerrarSidebarMovil()')
+    // MODAL GESTIÓN DE CITAS
+    #modalGestionCitas.modal-overlay(onclick='cerrarModalFuera(event)')
+      .modal-gc(onclick='event.stopPropagation()')
+        .modal-gc-header
+          .modal-gc-header-left
+            .modal-gc-icon
+              img(src='/img/Calendar22.png' alt)
+            div
+              h2 Gestión de Citas
+              p#modalSubtitulo Total de citas 3
+          button.modal-gc-close(onclick='cerrarModal()') ✕
+        .modal-gc-filtros
+          input.modal-gc-search(type='text' placeholder='Buscar por paciente.' oninput='filtrarCitas()')
+          select.modal-gc-select(onchange='filtrarCitas()')
+            option(value) Todos los estados
+            option(value='Pendiente') Pendiente
+            option(value='Completado') Completado
+            option(value='Cancelado') Cancelado
+        #listaCitas.modal-gc-body
+          .cita-card(data-estado='Pendiente')
+            .cita-card-top
+              .cita-fecha
+                img(src='/img/Calendar22.png' alt)
+                |  14 abr 2026
+              span.pill.pill-pendiente Pendiente
+            .cita-info
+              img(src='/img/Clock.png' alt)
+              |  09:00
+            .cita-info
+              img(src='/img/person.png' alt)
+              |  Juan Martínez López
+            .cita-info
+              img(src='/img/image 218.png' alt)
+              |  Dra. Ana López
+            .cita-motivo Control cardiológico
+            .cita-btns
+              button.btn-repro(onclick='event.stopPropagation(); abrirReprogramar(this)') Reprogramar
+              button.btn-cancel-cita Cancelar
+          .cita-card(data-estado='Pendiente')
+            .cita-card-top
+              .cita-fecha
+                img(src='/img/Calendar22.png' alt)
+                |  18 abr 2026
+              span.pill.pill-pendiente Pendiente
+            .cita-info
+              img(src='/img/Clock.png' alt)
+              |  10:00
+            .cita-info
+              img(src='/img/person.png' alt)
+              |  María González Pérez
+            .cita-info
+              img(src='/img/image 218.png' alt)
+              |  Dr. Carlos Pérez
+            .cita-motivo Consulta general - Control de rutina
+            .cita-btns
+              button.btn-repro(onclick='event.stopPropagation(); abrirReprogramar(this)') Reprogramar
+              button.btn-cancel-cita Cancelar
+          .cita-card(data-estado='Completado')
+            .cita-card-top
+              .cita-fecha
+                img(src='/img/Calendar22.png' alt)
+                |  18 abr 2026
+              span.pill.pill-completado Completado
+            .cita-info
+              img(src='/img/Clock.png' alt)
+              |  14:00
+            .cita-info
+              img(src='/img/person.png' alt)
+              |  Ana Rodríguez Silva
+            .cita-info
+              img(src='/img/image 218.png' alt)
+              |  Dr. Luis García
+            .cita-motivo Vacunación pediátrica
+    // MODAL REPROGRAMAR
+    #modalReprogramar.modal-overlay(onclick='cerrarReprogramarFuera(event)')
+      .modal-gc(style='width:420px;' onclick='event.stopPropagation()')
+        .modal-gc-header
+          .modal-gc-header-left
+            div
+              h2 Reprogramar Cita
+              p#reprogramarNombre
+        div(style='padding: 24px; display:flex; flex-direction:column; gap:16px;')
+          div
+            label.repro-label Reprogramar Cita
+            input.repro-input(type='date')
+          div
+            label.repro-label Reprogramar Hora
+            input.repro-input(type='time')
+          div(style='display:flex; gap:12px; margin-top:8px;')
+            button.btn-cancel-cita(style='flex:1; padding:11px;' onclick='cerrarReprogramar()') Cancelar
+            button.btn-repro(style='flex:1; padding:11px;' onclick='guardarReprogramar()') Guardar
+    // MODAL CONFIGURAR HORARIOS
+    #modalHorarios.modal-overlay(onclick='cerrarModalHorariosFuera(event)')
+      .modal-gc(style='width:520px;' onclick='event.stopPropagation()')
+        .modal-gc-header
+          .modal-gc-header-left
+            .modal-gc-icon
+              img(src='/img/Calendar22.png' alt)
+            div
+              h2 Mi Horario de Atención
+              p Configura tus días y horarios disponibles
+        .horarios-body
+          #diaLunes.dia-row
+            .dia-top
+              .dia-left
+                label.switch
+                  input(type='checkbox' onchange="toggleDia('diaLunes', this)")
+                  span.slider
+                span.dia-nombre Lunes
+              button.btn-agregar-hora(style='display:none;' onclick="agregarHora('diaLunes')")
+                | Agregar
+                | Horario
+            .dia-horas
+          #diaMartes.dia-row
+            .dia-top
+              .dia-left
+                label.switch
+                  input(type='checkbox' onchange="toggleDia('diaMartes', this)")
+                  span.slider
+                span.dia-nombre Martes
+              button.btn-agregar-hora(style='display:none;' onclick="agregarHora('diaMartes')")
+                | Agregar
+                | Horario
+            .dia-horas
+          #diaMiercoles.dia-row
+            .dia-top
+              .dia-left
+                label.switch
+                  input(type='checkbox' onchange="toggleDia('diaMiercoles', this)")
+                  span.slider
+                span.dia-nombre Miércoles
+              button.btn-agregar-hora(style='display:none;' onclick="agregarHora('diaMiercoles')")
+                | Agregar
+                | Horario
+            .dia-horas
+          #diaJueves.dia-row
+            .dia-top
+              .dia-left
+                label.switch
+                  input(type='checkbox' onchange="toggleDia('diaJueves', this)")
+                  span.slider
+                span.dia-nombre Jueves
+              button.btn-agregar-hora(style='display:none;' onclick="agregarHora('diaJueves')")
+                | Agregar
+                | Horario
+            .dia-horas
+          #diaViernes.dia-row
+            .dia-top
+              .dia-left
+                label.switch
+                  input(type='checkbox' onchange="toggleDia('diaViernes', this)")
+                  span.slider
+                span.dia-nombre Viernes
+              button.btn-agregar-hora(style='display:none;' onclick="agregarHora('diaViernes')")
+                | Agregar
+                | Horario
+            .dia-horas
+          #diaSabado.dia-row
+            .dia-top
+              .dia-left
+                label.switch
+                  input(type='checkbox' onchange="toggleDia('diaSabado', this)")
+                  span.slider
+                span.dia-nombre Sábado
+              button.btn-agregar-hora(style='display:none;' onclick="agregarHora('diaSabado')")
+                | Agregar
+                | Horario
+            .dia-horas
+          #diaDomingo.dia-row
+            .dia-top
+              .dia-left
+                label.switch
+                  input(type='checkbox' onchange="toggleDia('diaDomingo', this)")
+                  span.slider
+                span.dia-nombre Domingo
+              button.btn-agregar-hora(style='display:none;' onclick="agregarHora('diaDomingo')")
+                | Agregar
+                | Horario
+            .dia-horas
+          .info-box
+            span ⓘ
+            div
+              strong Información Importante
+              p
+                | Los pacientes solo podrán agendar citas en los horarios que configures aquí. Puedes tener múltiples
+                | horarios por día (por ejemplo, mañana y tarde).
+        .modal-gc-footer
+          button.btn-cancel-cita(style='flex:1; padding:11px;' onclick='cerrarModalHorarios()') Cancelar
+          button.btn-repro(style='flex:1; padding:11px;' onclick='guardarHorarios()') Guardar Horario
+    script(src="/js/dashboardMedical.js")
