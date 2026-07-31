@@ -1,40 +1,47 @@
-// 1. Importar los módulos necesarios
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// 2. Inicializar la aplicación Express
+// Importamos el enrutador de usuarios (¡No olvides el .js al final!)
+import userRoutes from './routes/userRoutes.js';
+
+// Recreamos __dirname para ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Inicializar Express
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// 3. Configurar Pug como motor de vistas
+// Configurar Pug como motor de vistas
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
-// 4. Configurar la carpeta pública (para CSS, imágenes, JS del navegador)
+// Configurar la carpeta pública (para CSS, imágenes, JS del navegador)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// (Opcional por ahora) Middleware para entender datos de formularios POST
+// Middlewares para procesar datos de formularios POST / JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// 5. Crear las rutas básicas
+// ----------------------------------------------------
+// RUTAS
+// ----------------------------------------------------
 
-// Ruta para la página principal
-app.get('/', (req, res) => {
-  res.render('dashboardMedical', { title: 'Inicio - Sistema Médico' });
+// Rutas de autenticación (Login, Registro, Recuperar contraseña)
+app.use('/', userRoutes);
+
+// Ruta principal -> Carga el Dashboard Médico (SIGCMI)
+app.get('/dashboard', (req, res) => {
+  res.render('dashboardMedical', { title: 'Portal Médico - SIGCMI' });
 });
 
-// Ruta para el login
-app.get('/login', (req, res) => {
-  res.render('login', { title: 'Iniciar Sesión' });
-});
-
-// Ruta para el panel (dashboard)
+// Ruta del panel alternativo (si lo conservas)
 app.get('/panel', (req, res) => {
   res.render('panel', { title: 'Panel de Control' });
 });
 
-// 6. Iniciar el servidor
+// Iniciar el servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`🚀 Servidor corriendo con ES Modules en http://localhost:${PORT}`);
 });
