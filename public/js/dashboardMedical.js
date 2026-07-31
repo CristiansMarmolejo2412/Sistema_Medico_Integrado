@@ -1,78 +1,116 @@
-// TOGGLE SIDEBAR //
+// TOGGLE SIDEBAR (Ajustado)
 function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");
   const main    = document.getElementById("mainContent");
+  const toggleBtn = document.getElementById("toggleBtn");
+  const overlay = document.getElementById("sidebarOverlay");
+
   if (window.innerWidth <= 768) {
     sidebar.classList.toggle("open");
-    document.getElementById("sidebarOverlay").classList.toggle("show");
+    if (overlay) overlay.classList.toggle("show");
   } else {
     sidebar.classList.toggle("collapsed");
     main.classList.toggle("collapsed");
-    document.getElementById("toggleBtn").style.marginLeft =
-      sidebar.classList.contains("collapsed") ? "4px" : "";
+    
+    // Alineación suave del botón al colapsar
+    if (toggleBtn) {
+      toggleBtn.style.marginLeft = sidebar.classList.contains("collapsed") ? "0px" : "";
+    }
   }
 }
 
 function cerrarSidebarMovil() {
-  document.getElementById("sidebar").classList.remove("open");
-  document.getElementById("sidebarOverlay").classList.remove("show");
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("sidebarOverlay");
+  
+  if (sidebar) sidebar.classList.remove("open");
+  if (overlay) overlay.classList.remove("show");
 }
 
-
-// NAVEGACIÓN ENTRE VISTAS // 
+// NAVEGACIÓN ENTRE VISTAS
 function cambiarVista(e, viewId, link) {
   e.preventDefault();
   document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("preActive"));
   link.classList.add("preActive");
+  
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.getElementById(viewId).classList.add("active");
+  const vistaTarget = document.getElementById(viewId);
+  if (vistaTarget) vistaTarget.classList.add("active");
+  
   if (window.innerWidth <= 768) cerrarSidebarMovil();
 }
 
-// CERRAR SESIÓN //
+// CERRAR SESIÓN
 function cerrarSesion() {
   if (confirm("¿Seguro que deseas cerrar sesión?")) {
     alert("Sesión cerrada. Redirigiendo al login...");
   }
 }
 
-// BOTON INICIAR CONSULTA // 
+// BOTON INICIAR CONSULTA
 function iniciarConsulta(id) {
   const cita = document.getElementById(id);
+  if (!cita) return;
+  
   cita.classList.replace("estado-pendiente", "estado-encurso");
-  cita.querySelector(".state").textContent = "En curso";
-  cita.querySelector(".state").className = "state yellowState";
-  cita.querySelector(".hour").classList.add("hour-encurso");
+  
+  const state = cita.querySelector(".state");
+  if (state) {
+    state.textContent = "En curso";
+    state.className = "state yellowState";
+  }
+  
+  const hour = cita.querySelector(".hour");
+  if (hour) hour.classList.add("hour-encurso");
+  
   const btn = cita.querySelector(".btn-iniciar");
-  btn.textContent = "Finalizar Consulta";
-  btn.className = "btn-consulta btn-finalizar";
-  btn.setAttribute("onclick", `finalizarConsulta('${id}')`);
+  if (btn) {
+    btn.textContent = "Finalizar Consulta";
+    btn.className = "btn-consulta btn-finalizar";
+    btn.setAttribute("onclick", `finalizarConsulta('${id}')`);
+  }
 }
 
-// BOTON FINALIZAR CONSULTA // 
+// BOTON FINALIZAR CONSULTA
 function finalizarConsulta(id) {
   const cita = document.getElementById(id);
+  if (!cita) return;
+
   cita.classList.replace("estado-encurso", "estado-completada");
-  cita.querySelector(".state").textContent = "Completado";
-  cita.querySelector(".state").className = "state greenState";
-  cita.querySelector(".hour").classList.remove("hour-encurso");
-  cita.querySelector(".btn-full-row").style.display = "none";
+  
+  const state = cita.querySelector(".state");
+  if (state) {
+    state.textContent = "Completado";
+    state.className = "state greenState";
+  }
+  
+  const hour = cita.querySelector(".hour");
+  if (hour) hour.classList.remove("hour-encurso");
+  
+  const btnRow = cita.querySelector(".btn-full-row");
+  if (btnRow) btnRow.style.display = "none";
 }
 
-// MODAL GESTIÒN CITAS // 
-
+// MODAL GESTIÓN CITAS
 function abrirModal() {
-  document.getElementById("modalGestionCitas").classList.add("abierto");
-  actualizarSubtitulo();
+  const modal = document.getElementById("modalGestionCitas");
+  if (modal) {
+    modal.classList.add("abierto");
+    actualizarSubtitulo();
+  }
 }
 
 function cerrarModal() {
-  document.getElementById("modalGestionCitas").classList.remove("abierto");
+  const modal = document.getElementById("modalGestionCitas");
+  if (modal) modal.classList.remove("abierto");
 }
 
 function filtrarCitas() {
-  const texto  = document.querySelector(".modal-gc-search").value.toLowerCase();
-  const estado = document.querySelector(".modal-gc-select").value;
+  const inputSearch = document.querySelector(".modal-gc-search");
+  const selectEstado = document.querySelector(".modal-gc-select");
+  
+  const texto  = inputSearch ? inputSearch.value.toLowerCase() : "";
+  const estado = selectEstado ? selectEstado.value : "";
   let visibles  = 0;
 
   document.querySelectorAll(".cita-card").forEach(card => {
@@ -89,7 +127,8 @@ function filtrarCitas() {
     const msg = document.createElement("p");
     msg.className  = "sin-resultados";
     msg.textContent = "No se encontraron citas.";
-    document.getElementById("listaCitas").appendChild(msg);
+    const lista = document.getElementById("listaCitas");
+    if (lista) lista.appendChild(msg);
   }
 
   actualizarSubtitulo(visibles);
@@ -97,36 +136,41 @@ function filtrarCitas() {
 
 function actualizarSubtitulo(n) {
   const total = n !== undefined ? n : document.querySelectorAll(".cita-card").length;
-  document.getElementById("modalSubtitulo").textContent = `Total de citas ${total}`;
+  const subtitulo = document.getElementById("modalSubtitulo");
+  if (subtitulo) subtitulo.textContent = `Total de citas ${total}`;
 }
 
-// FUNCIONES REPROGRAMAR CITA // 
-
+// REPROGRAMAR CITA
 function abrirReprogramar(btn) {
   const card = btn.closest(".cita-card");
-  const nombre = card.querySelector(".cita-info:nth-child(4)").textContent.replace("👤","").trim();
-  document.getElementById("reprogramarNombre").textContent = nombre;
+  const infoUser = card.querySelector(".cita-info:nth-child(4)");
+  
+  if (infoUser) {
+    const nombre = infoUser.textContent.replace("👤","").trim();
+    const lblNombre = document.getElementById("reprogramarNombre");
+    if (lblNombre) lblNombre.textContent = nombre;
+  }
 
-  // Oculta solo el contenido del modal de gestión, NO el overlay
-  document.getElementById("modalGestionCitas").classList.remove("abierto");
-  document.getElementById("modalReprogramar").classList.add("abierto");
+  document.getElementById("modalGestionCitas")?.classList.remove("abierto");
+  document.getElementById("modalReprogramar")?.classList.add("abierto");
 }
+
 function cerrarReprogramar() {
-  document.getElementById("modalReprogramar").classList.remove("abierto");
-  document.getElementById("modalGestionCitas").classList.add("abierto");
+  document.getElementById("modalReprogramar")?.classList.remove("abierto");
+  document.getElementById("modalGestionCitas")?.classList.add("abierto");
 }
+
 function cerrarReprogramarFuera(event) {
   if (event.target.id === "modalReprogramar") cerrarReprogramar();
 }
 
-// FUNCIONES MODAL HORARIO //
-
+// MODAL HORARIO
 function abrirModalHorarios() {
-  document.getElementById("modalHorarios").classList.add("abierto");
+  document.getElementById("modalHorarios")?.classList.add("abierto");
 }
 
 function cerrarModalHorarios() {
-  document.getElementById("modalHorarios").classList.remove("abierto");
+  document.getElementById("modalHorarios")?.classList.remove("abierto");
 }
 
 function cerrarModalHorariosFuera(e) {
@@ -135,20 +179,26 @@ function cerrarModalHorariosFuera(e) {
 
 function toggleDia(diaId, checkbox) {
   const dia = document.getElementById(diaId);
+  if (!dia) return;
+  
   const btn = dia.querySelector(".btn-agregar-hora");
+  const horasContenedor = dia.querySelector(".dia-horas");
+
   if (checkbox.checked) {
     dia.classList.add("activo");
-    btn.style.display = "block";
+    if (btn) btn.style.display = "block";
     agregarHora(diaId);
   } else {
     dia.classList.remove("activo");
-    btn.style.display = "none";
-    dia.querySelector(".dia-horas").innerHTML = "";
+    if (btn) btn.style.display = "none";
+    if (horasContenedor) horasContenedor.innerHTML = "";
   }
 }
 
 function agregarHora(diaId) {
   const contenedor = document.querySelector(`#${diaId} .dia-horas`);
+  if (!contenedor) return;
+
   const fila = document.createElement("div");
   fila.className = "hora-row";
   fila.innerHTML = `
