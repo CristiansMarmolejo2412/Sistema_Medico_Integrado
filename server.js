@@ -31,15 +31,6 @@ app.use(express.json());
 // Rutas de autenticación (Login, Registro, Recuperar contraseña)
 app.use('/', userRoutes);
 
-// Ruta principal -> Carga el Dashboard Médico (SIGCMI)
-app.get('/dashboard', (req, res) => {
-  res.render('dashboardMedical', { title: 'Portal Médico - SIGCMI' });
-});
-
-// Ruta del panel alternativo (si lo conservas)
-app.get('/panel', (req, res) => {
-  res.render('panel', { title: 'Panel de Control' });
-});
 
 // Iniciar el servidor
 app.listen(PORT, () => {
