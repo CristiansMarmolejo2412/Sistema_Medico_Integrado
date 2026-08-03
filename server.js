@@ -29,6 +29,11 @@ app.get('/login', (req, res) => {
   res.render('login', { title: 'Iniciar Sesión' });
 });
 
+//Ruta para register
+app.get('/registro', (req, res) => {
+  res.render('register', { title: 'Registro' });
+});
+
 // Ruta para el panel (dashboard)
 app.get('/panel', (req, res) => {
   res.render('panel', { title: 'Panel de Control' });
