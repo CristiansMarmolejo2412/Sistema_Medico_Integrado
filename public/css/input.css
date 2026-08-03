@@ -1,2 +1,2 @@
 @import "tailwindcss";
-@source "../../views";
+@import "./register.css";
