@@ -24,7 +24,7 @@ router.post("/recover-password", recoverPassword);
 
 // Dashboard Médico (SIGCMI)
 router.get("/dashboard", (req, res) => {
-    res.render("dashboardMedical", { title: "Portal Médico - SIGCMI" });
+    res.render("dashbo  ardMedical", { title: "Portal Médico - SIGCMI" });
 });
 
 export default router;
