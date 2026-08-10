@@ -27,13 +27,13 @@ app.use(express.json());
 // 5. Crear las rutas básicas
 
 // Ruta para la página principal
-app.get('/', (req, res) => {
+app.get('', (req, res) => {
   res.render('auth/login', { title: 'Inicio - Sistema Médico' });
 });
 
 // Ruta para la página dashboard
 app.get('/dashboard', (req, res) => {
-  res.render('dashboardMedical', { title: 'Inicio - Sistema Médico' });
+  res.render('viewsMedico/dashboardMedical', { title: 'Inicio - Sistema Médico' });
 });
 
 // Ruta para el login
@@ -43,7 +43,7 @@ app.get('/login', (req, res) => {
 
 //Ruta para register
 app.get('/registro', (req, res) => {
-  res.render('register', { title: 'Registro' });
+  res.render('auth/register', { title: 'Registro' });
 });
 
 //Ruta para recover password
