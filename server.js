@@ -1,11 +1,10 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-// Importamos el enrutador de usuarios (¡No olvides el .js al final!)
+import db from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 
-// Recreamos __dirname para ES Modules
+// Recrear __dirname para ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -17,46 +16,56 @@ const PORT = process.env.PORT || 3000;
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
-// Configurar la carpeta pública (para CSS, imágenes, JS del navegador)
+// Carpeta pública
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Middlewares para procesar datos de formularios POST / JSON
+// Middlewares para lectura de datos (Forms / JSON)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// 5. Crear las rutas básicas
-
-// Ruta para la página principal
-app.get('', (req, res) => {
+// Definición de Rutas Directas
+app.get('/', (req, res) => {
   res.render('auth/login', { title: 'Inicio - Sistema Médico' });
 });
 
-// Ruta para la página dashboard
 app.get('/dashboard', (req, res) => {
-  res.render('viewsMedico/dashboardMedical', { title: 'Inicio - Sistema Médico' });
+  res.render('viewsMedico/dashboardMedical', { title: 'Dashboard - Sistema Médico' });
 });
 
-// Ruta para el login
 app.get('/login', (req, res) => {
   res.render('auth/login', { title: 'Iniciar Sesión' });
 });
 
-//Ruta para register
 app.get('/registro', (req, res) => {
-  res.render('auth/register', { title: 'Registro' });
+  res.render('auth/register', { title: 'Crear Cuenta' });
 });
 
-//Ruta para recover password
 app.get('/recover-password', (req, res) => {
-  res.render('auth/recover-password', { title: 'Registro' });
+  res.render('auth/recover-password', { title: 'Recuperar Contraseña' });
 });
 
-// Ruta para el panel (dashboard)
-app.get('/panel', (req, res) => {
-  res.render('panel', { title: 'Panel de Control' });
+app.post('/login', (req, res) => {
+  // Nota: Aquí posteriormente irá la lógica de autenticación (JWT/Sessions)
+  res.redirect('/dashboard');
 });
 
-// Iniciar el servidor
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo con ES Modules en http://localhost:${PORT}`);
-});
+// Usar el enrutador modularizado si manejas subrutas en userRoutes
+app.use('/users', userRoutes);
+
+// Conexión a la BD e inicio del servidor
+const startServer = async () => {
+  try {
+    await db.authenticate();
+    await db.sync(); // Sincroniza modelos con MySQL
+    console.log('✅ Conexión exitosa a MySQL mediante Sequelize');
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor listo en http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('❌ Error al conectar a la base de datos:', error);
+    process.exit(1);
+  }
+};
+
+startServer();

@@ -214,3 +214,55 @@ function guardarHorarios() {
   alert("Horario guardado correctamente.");
   cerrarModalHorarios();
 }
+
+// SELECCIONAR PACIENTE DE LA LISTA
+function seleccionarPaciente(element) {
+  // 1. Quitar la clase "activo" de todos los ítems de la lista
+  document.querySelectorAll('.paciente-item').forEach(item => {
+    item.classList.remove('activo');
+  });
+
+  // 2. Agregar la clase "activo" al elemento presionado
+  if (element && element.classList) {
+    element.classList.add('activo');
+  }
+
+  // 3. (Opcional) Obtener el nombre del paciente cliqueado
+  const nombrePaciente = element.querySelector('h4')?.textContent;
+  console.log("Paciente seleccionado:", nombrePaciente);
+}
+
+// FILTRAR PACIENTES EN TIEMPO REAL
+function filtrarPacientes(query) {
+  const texto = query.toLowerCase().trim();
+  const pacientes = document.querySelectorAll('.paciente-item');
+  let encontrados = 0;
+
+  pacientes.forEach(paciente => {
+    const nombre = paciente.querySelector('h4')?.textContent.toLowerCase() || '';
+    if (nombre.includes(texto)) {
+      paciente.style.display = 'flex';
+      encontrados++;
+    } else {
+      paciente.style.display = 'none';
+    }
+  });
+
+  // Manejar mensaje de "Sin resultados"
+  let sinRes = document.querySelector('.sin-pacientes');
+  if (encontrados === 0) {
+    if (!sinRes) {
+      sinRes = document.createElement('p');
+      sinRes.className = 'sin-pacientes';
+      sinRes.style.cssText = 'padding: 15px; text-align: center; color: #666; font-size: 14px;';
+      sinRes.textContent = 'No se encontraron pacientes.';
+      document.querySelector('.pacientes-lista').appendChild(sinRes);
+    }
+  } else if (sinRes) {
+    sinRes.remove();
+  }
+}
+
+// Exponer las funciones globalmente para que las lea el HTML/Pug
+window.seleccionarPaciente = seleccionarPaciente;
+window.filtrarPacientes = filtrarPacientes;

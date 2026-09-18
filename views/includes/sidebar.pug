@@ -5,7 +5,7 @@ aside#sidebar.sidebar
   hr.line-1
   .user
     .avatar
-      img.avatar-img(src='/img/icono-medico-avatar.svg' alt='Avatar médico')
+      img.avatar-img(src='/medico/img/icono-medico-avatar.svg' alt='Avatar médico')
     div
       p.bienvenido-txt Bienvenido
       h4 montoyajuanes11
@@ -14,12 +14,12 @@ aside#sidebar.sidebar
   hr.line-2
   nav
     a.nav-link.preActive(href='#' onclick="cambiarVista(event,'agendaView',this)")
-      img(src='/img/icono-agenda.svg' alt='Agenda')
+      img(src='/medico/img/icono-agenda.svg' alt='Agenda')
       .nav-item Agenda
     a.nav-link(href='#' onclick="cambiarVista(event,'pacientesView',this)")
-      img(src='/img/icono-pacientes.svg' alt='Mis Pacientes')
+      img(src='/medico/img/icono-pacientes.svg' alt='Mis Pacientes')
       .nav-item Mis Pacientes
   hr.line-3
   .logout(onclick='cerrarSesion()')
-    img.log-out(src='/img/icono-salir.svg' alt='Cerrar sesión')
+    img.log-out(src='/medico/img/icono-salir.svg' alt='Cerrar sesión')
     span.sesionlogout Cerrar Sesiónl

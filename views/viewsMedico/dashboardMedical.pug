@@ -1,4 +1,7 @@
-extends layout/main
+extends ../layout/main
+
+block append styles
+  link(rel="stylesheet" href="/medico/css/dashboardMedical.css")
 
 block content
   main#mainContent.main
@@ -16,7 +19,7 @@ block content
               h2 48
               span.card-sub 2 completadas
             .card-icon.icono-azul
-              img(src='/img/blueCalendar.png' alt='Citas')
+              img(src='/medico/img/blueCalendar.png' alt='Citas')
         .card
           p Pacientes Activos
           .card-body
@@ -24,7 +27,7 @@ block content
               h2 48
               span.card-sub +3 este mes
             .card-icon.icono-verde
-              img(src='/img/usderGreen.png' alt='Pacientes')
+              img(src='/medico/img/usderGreen.png' alt='Pacientes')
         .card
           p Consultas Esta Semana
           .card-body
@@ -32,7 +35,7 @@ block content
               h2 48
               span.card-sub Promedio: 9/día
             .card-icon.icono-morado
-              img(src='/img/historyUser.png' alt='Consultas')
+              img(src='/medico/img/historyUser.png' alt='Consultas')
         .card
           p Tiempo Promedio
           .card-body
@@ -40,7 +43,7 @@ block content
               h2 48
               span.card-sub Por consulta
             .card-icon.icono-naranja
-              img(src='/img/clockUserADMIN.png' alt='Tiempo')
+              img(src='/medico/img/clockUserADMIN.png' alt='Tiempo')
       section.content
         // AGENDA DEL DÍA
         .appointments
@@ -85,7 +88,7 @@ block content
           button.btnActions.btnActionGreen(onclick='abrirModalHorarios()') Configurar Horarios
           .proxima-cita
             .proxima-cita-header
-              img.proxima-icon(src='/img/Icon.png' alt='Reloj')
+              img.proxima-icon(src='/medico/img/Icon.png' alt='Reloj')
               span Próxima Cita
             .proxima-hora 11:00 AM
             .proxima-paciente Ana Rodríguez
@@ -104,31 +107,31 @@ block content
             span.search-icon 🔍
             input(type='text' placeholder='Buscar paciente...' oninput='filtrarPacientes(this.value)')
           .paciente-item.activo(onclick='seleccionarPaciente(this)')
-            img(src='/img/icono-medico-avatar.svg' alt)
+            img(src='/medico/img/icono-medico-avatar.svg' alt)
             div
               h4 María González Pérez
               span
-                img.NegroCalen(src='/img/CalendarNegro.png' alt='Imagen Calendario')
+                img.NegroCalen(src='/medico/img/CalendarNegro.png' alt='Imagen Calendario')
                 |  5 citas
               span
-                img.NegroCalen(src='/img/Google-Docs Negro.png' alt='Imagen archivo')
+                img.NegroCalen(src='/medico/img/Google-Docs Negro.png' alt='Imagen archivo')
                 |  3 diagnósticos
             span.paciente-arrow ›
           .paciente-item(onclick='seleccionarPaciente(this)')
-            img.NegroCalen(src='/img/icono-medico-avatar.svg' alt)
+            img.NegroCalen(src='/medico/img/icono-medico-avatar.svg' alt)
             div
               h4 María González Pérez
               span
-                img.NegroCalen(src='/img/CalendarNegro.png' alt='Imagen Calendario')
+                img.NegroCalen(src='/medico/img/CalendarNegro.png' alt='Imagen Calendario')
                 |  5 citas
               span
-                img.NegroCalen(src='/img/Google-Docs Negro.png' alt)
+                img.NegroCalen(src='/medico/img/Google-Docs Negro.png' alt)
                 |  3 diagnósticos
             span.paciente-arrow ›
         // COLUMNA DERECHA: detalle
         .paciente-detalle
           .detalle-header
-            img.detalle-avatar(src='/img/icono-medico-avatar.svg' alt)
+            img.detalle-avatar(src='/medico/img/icono-medico-avatar.svg' alt)
             .detalle-info
               h2 María González Pérez
               p
@@ -140,10 +143,10 @@ block content
               p Última Visita: 9/04/2026
           .detalle-badges
             span.badge.badge-blue
-              img(src='/img/CalendarPaciente.png' alt='Imagen Calendario')
+              img(src='/medico/img/CalendarPaciente.png' alt='Imagen Calendario')
               |  Citas: 5
             span.badge.badge-purple
-              img(src='/img/google-docs 2.png' alt='Imagen archivo')
+              img(src='/medico/img/google-docs 2.png' alt='Imagen archivo')
               |  Diagnósticos: 3
           .historial
             h3 Historial Médico
@@ -174,3 +177,6 @@ block content
               p
                 strong Tratamiento:
               p Vitamina D 1000 UI diaria como suplemento preventivo
+
+block scripts
+  script(src="/medico/js/dashboardMedical.js")
