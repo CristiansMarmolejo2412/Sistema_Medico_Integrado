@@ -106,8 +106,8 @@ block content
           .pacientes-search-box
             span.search-icon 🔍
             input(type='text' placeholder='Buscar paciente...' oninput='filtrarPacientes(this.value)')
-          .paciente-item.activo(onclick='seleccionarPaciente(this)')
-            img(src='/medico/img/icono-medico-avatar.svg' alt)
+          .paciente-item(onclick='seleccionarPaciente(this)')
+            img(src='/medico/img/Group 16.png' alt)
             div
               h4 María González Pérez
               span
@@ -118,7 +118,7 @@ block content
                 |  3 diagnósticos
             span.paciente-arrow ›
           .paciente-item(onclick='seleccionarPaciente(this)')
-            img.NegroCalen(src='/medico/img/icono-medico-avatar.svg' alt)
+            img(src='/medico/img/Group 16.png' alt)
             div
               h4 María González Pérez
               span
@@ -131,7 +131,7 @@ block content
         // COLUMNA DERECHA: detalle
         .paciente-detalle
           .detalle-header
-            img.detalle-avatar(src='/medico/img/icono-medico-avatar.svg' alt)
+            img.detalle-avatar(src='/medico/img/Group 16.png' alt)
             .detalle-info
               h2 María González Pérez
               p
